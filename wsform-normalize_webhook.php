@@ -16,7 +16,7 @@
  * Plugin Name:       WSForm Normalize Webhook
  * Plugin URI:        https://juvo-design.de
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
- * Version:           1.0.0
+ * Version:           %version%
  * Author:            Justin Vogt
  * Author URI:        https://juvo-design.de
  * License:           GPL-2.0+
@@ -79,3 +79,10 @@ function run_wsform_normalize_webhook() {
 
 }
 run_wsform_normalize_webhook();
+
+$myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
+    'https://github.com/JUVOJustin/WSForm-webhook-normalize',
+    __FILE__,
+    'wsform-normalize_webhook'
+);
+$myUpdateChecker->getVcsApi()->enableReleaseAssets();

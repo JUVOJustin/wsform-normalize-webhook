@@ -1,12 +1,21 @@
-> You most likely want to overwrite this readme with your own content
+# WSForm Normalize Webhook
+This plugin has the sole intention of providing a better webhook format than WSForm does by itself.
 
-# What is this boilerplate
-This boilerplate is a fork of [WordPress Boilerplate](https://github.com/DevinVinson/WordPress-Plugin-Boilerplate) but with namespaces, shortcodes support, phpstan and laravel mix support out of the box. 
+## Main benefits:
+* Additional information for each field such as:
+    * Label
+    * Sectionname
+    * Groupname
+    * Fieldtype
+* Grouping of repeatable sections to get information on a per-row basis
 
-# How to use
+## How to set up
+To use this plugin [Advanced Custom Fields Pro](https://www.advancedcustomfields.com/pro/) needs to be installed. It provides the option page and input fields to map
+hooks with the webhook url.
 
- 1. Create a folder inside your wordpress installation and name it after your plugin
- 2. Copy a dump of this repo inside the folder
- 3. Make sure `setup.sh` is executable (`chmod +x setup.sh`)
- 4. Run `setup sh` . The `-f` parameter determines the filename (*snake_case*) for assets while the `-n` parameter sets the namespace and php class filenames (*Pascal_Snake_Case*). If your plugins name should be 'Awesome Plugin' the full command would look like: `./setup.sh -f awesome_plugin -n Awesome_Plugin`. 
- 5. That's it. You maybe want to remove `setup.sh` or this `readme.md` file
+1. [Create a "Run WordPress Hook" action](https://wsform.com/knowledgebase/run-wordpress-hook/) for your form and select any hook tag you want e.g. `wsf_normalize_webhook`
+2. Go to `/wp-admin/options-general.php?page=wsform-nomalize-webhook` of your WordPress instance
+   3. Select the hook to want to set the url for
+   4. Enter the url you want to send the form data to
+
+**That´s it!**

@@ -37,5 +37,8 @@
       "phpstan/extension-installer": true,
       "composer/installers": true
     }
+  },
+  "require": {
+    "yahnis-elsts/plugin-update-checker": "^4.13"
   }
 }
