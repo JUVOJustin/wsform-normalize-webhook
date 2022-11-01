@@ -16,7 +16,7 @@
  * Plugin Name:       WSForm Normalize Webhook
  * Plugin URI:        https://github.com/JUVOJustin/wsform-normalize-webhook
  * Description:       This plugin has the sole intention of providing a better webhook format than WSForm does by itself.
- * Version:           1.0.1
+ * Version:           1.0.2
  * Author:            Justin Vogt
  * Author URI:        https://juvo-design.de
  * License:           GPL-2.0+
@@ -73,7 +73,7 @@ register_deactivation_hook( __FILE__, 'deactivate_wsform_normalize_webhook' );
  */
 function run_wsform_normalize_webhook() {
 
-	$version = "1.0.1";
+	$version = "1.0.2";
 	$plugin = new WSForm_Normalize_Webhook($version);
 	$plugin->run();
 
