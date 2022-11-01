@@ -60,7 +60,6 @@ class WSForm_Normalize_Webhook {
 		$this->load_dependencies();
 		$this->set_locale();
 		$this->define_admin_hooks();
-		$this->define_public_hooks();
 	
 	}
 
@@ -102,11 +101,6 @@ class WSForm_Normalize_Webhook {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Admin( $this->get_plugin_name(), $this->get_version() );
-
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
-
         $options = new Options();
         $this->loader->add_action('acf/init', $options, 'register_page');
         $this->loader->add_filter('acf/init', $options, 'register_fields');
@@ -114,22 +108,6 @@ class WSForm_Normalize_Webhook {
         $this->loader->add_filter('acf/load_field/key=field_63601771d963f', $options, 'get_actions');
 
     }
-
-	/**
-	 * Register all of the hooks related to the public-facing functionality
-	 * of the plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	private function define_public_hooks() {
-
-		$plugin_public = new Frontend( $this->get_plugin_name(), $this->get_version() );
-
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-
-	}
 
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.

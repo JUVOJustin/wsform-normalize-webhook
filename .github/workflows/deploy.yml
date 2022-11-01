@@ -48,14 +48,6 @@ jobs:
           sed -i -E 's/%version%/${{ env.RELEASE_VERSION }}/' ${{ github.event.repository.name }}.php
           sed -i -E 's/%version%/${{ env.RELEASE_VERSION }}/' README.txt
 
-      - name: Update resources
-        uses: test-room-7/action-update-file@v1
-        with:
-          file-path: |
-            ${{ github.event.repository.name }}.php
-          commit-msg: Update Version in WordPress specific files
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
       # Delete Development Files
       - shell: bash
         run: |
