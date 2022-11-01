@@ -35,6 +35,15 @@ hooks with the webhook url.
 
 == Changelog ==
 
+= 1.0.4 =
+Remove duplicate "goup" and "section" data for fields in repeatable sections
+
+= 1.0.3 =
+Improve pipeline
+
+= 1.0.2 =
+Update plugin header
+
 = 1.0.1 =
 * Pipeline improves
 * Autoupdater

@@ -64,8 +64,9 @@ class Webhook
 
                 // Separate sections if repeatable
                 if ($section->meta->section_repeatable) {
-                    $repeatableSections['section_'.$section->id] = [
-                      "label" => $section->label
+                    $repeatableSections['section_' . $section->id] = [
+                        "label" => $section->label,
+                        "group" => $group->label,
                     ];
                 }
 
@@ -101,8 +102,12 @@ class Webhook
 
             // Add fields to sections
             if ($section_id && $row_index) {
-                $repeatableSections['section_'.$section_id]['rows'][$row_index][$id] = $fieldsInfo[$id];
-                $repeatableSections['section_'.$section_id]['rows'][$row_index][$id]['value'] =  $meta_field['value_array'] ?? $meta_field['value'];
+                $repeatableSections['section_' . $section_id]['rows'][$row_index][$id] = $fieldsInfo[$id];
+                $repeatableSections['section_' . $section_id]['rows'][$row_index][$id]['value'] = $meta_field['value_array'] ?? $meta_field['value'];
+
+                // Remove duplicate data for sections
+                unset($repeatableSections['section_' . $section_id]['rows'][$row_index][$id]['section']);
+                unset($repeatableSections['section_' . $section_id]['rows'][$row_index][$id]['group']);
                 continue;
             }
 
