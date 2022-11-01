@@ -14,8 +14,8 @@
  *
  * @wordpress-plugin
  * Plugin Name:       WSForm Normalize Webhook
- * Plugin URI:        https://juvo-design.de
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Plugin URI:        https://github.com/JUVOJustin/wsform-normalize-webhook
+ * Description:       This plugin has the sole intention of providing a better webhook format than WSForm does by itself.
  * Version:           1.0.1
  * Author:            Justin Vogt
  * Author URI:        https://juvo-design.de
