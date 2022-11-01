@@ -58,11 +58,11 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Update Tag
-        uses: richardsimko/update-tag@v1
+        uses: EndBug/latest-tag@latest
         with:
-          tag_name: ${{ env.RELEASE_VERSION }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # You can change the name of the tag or branch with this input.
+          # Default: 'latest'
+          ref: ${{ env.RELEASE_VERSION }}
 
       # Delete Development Files
       - shell: bash
