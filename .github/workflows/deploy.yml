@@ -62,6 +62,11 @@ jobs:
         run: |
           git push --delete origin ${{ env.RELEASE_VERSION }}
           git push origin ${{ env.RELEASE_VERSION }}
+          
+      - name: Delete draft
+        uses: hugo19941994/delete-draft-releases@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Delete Development Files
       - shell: bash
