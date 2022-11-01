@@ -81,7 +81,7 @@ function run_wsform_normalize_webhook() {
 run_wsform_normalize_webhook();
 
 $myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
-    'https://github.com/JUVOJustin/WSForm-webhook-normalize',
+    'https://github.com/JUVOJustin/wsform-normalize-webhook',
     __FILE__,
     'wsform-normalize_webhook'
 );
