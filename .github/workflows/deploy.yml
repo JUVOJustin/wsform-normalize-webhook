@@ -57,12 +57,11 @@ jobs:
           commit-msg: Update Version in WordPress specific files
           github-token: ${{ secrets.GITHUB_TOKEN }}
           
+
       - name: Update Tag
-        uses: EndBug/latest-tag@latest
-        with:
-          # You can change the name of the tag or branch with this input.
-          # Default: 'latest'
-          ref: ${{ env.RELEASE_VERSION }}
+        run: |
+          git push --delete origin ${{ env.RELEASE_VERSION }}
+          git push origin ${{ env.RELEASE_VERSION }}
 
       # Delete Development Files
       - shell: bash
