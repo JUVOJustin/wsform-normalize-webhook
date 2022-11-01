@@ -1,0 +1,3 @@
+<?php
+define( 'WSFORM_NORMALIZE_WEBHOOK_PATH', __FILE__ );
+define( 'WSFORM_NORMALIZE_WEBHOOK_URL', __FILE__ );

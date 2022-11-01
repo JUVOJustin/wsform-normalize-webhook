@@ -1,0 +1,41 @@
+{
+  "name": "juvo/demo-plugin",
+  "description": "Blabla",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Justin Vogt",
+      "email": "mail@juvo-design.de",
+      "homepage": "https://juvo-design.de"
+    }
+  ],
+  "require-dev": {
+    "phpstan/phpstan": "^1.7",
+    "php-stubs/acf-pro-stubs": "^5.12",
+    "szepeviktor/phpstan-wordpress": "^1.1",
+    "phpstan/extension-installer": "^1.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "WSForm_Normalize_Webhook\\": "src/",
+      "WSForm_Normalize_Webhook\\Admin\\": "admin/",
+      "WSForm_Normalize_Webhook\\Frontend\\": "frontend/"
+    }
+  },
+  "scripts": {
+    "static-analyse": "@php ./vendor/bin/phpstan analyse"
+  },
+  "extra": {
+    "installer-paths": {
+      "vendor/{$vendor}/{$name}/": [
+        "type:wordpress-plugin"
+      ]
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "phpstan/extension-installer": true,
+      "composer/installers": true
+    }
+  }
+}
