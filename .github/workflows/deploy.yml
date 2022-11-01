@@ -37,7 +37,6 @@ jobs:
       # Build Assets
       - name: Build assets
         run: |
-          npm run production
           rm -rf node_modules && npm install --production
 
       # Update Version
