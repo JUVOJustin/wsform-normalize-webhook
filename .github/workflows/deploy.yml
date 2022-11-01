@@ -61,6 +61,8 @@ jobs:
         uses: richardsimko/update-tag@v1
         with:
           tag_name: ${{ env.RELEASE_VERSION }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Delete Development Files
       - shell: bash
