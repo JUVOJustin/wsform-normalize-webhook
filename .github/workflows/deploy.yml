@@ -62,6 +62,7 @@ jobs:
         run: |
           find . -name "composer.json" -type f -delete && find . -name "composer.lock" -type f -delete
           find . -name "package.json" -type f -delete && find . -name "package-lock.json" -type f -delete
+          find . -name "constants.php" && find . -name "README.md"
           rm -rf .git && find . -name ".gitignore" -type f -delete
           rm -rf .github
 
