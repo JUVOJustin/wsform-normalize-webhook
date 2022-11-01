@@ -22,3 +22,56 @@ hooks with the webhook url.
 	 - Enter the url you want to send the form data to
 
 **That´s it!**
+
+## Example Payload
+```json
+{
+  "0": {
+    "label": "Label of Field with ID 0",
+    "section": "Section title",
+    "group": "Group title",
+    "type": "text",
+    "value": [
+      "foo"
+    ]
+  },
+  "section_8": {
+    "label": "Section title",
+    "rows": {
+      "1": {
+        "84": {
+          "label": "Label of Field with ID 84 in row 1 of section 8",
+          "type": "radio",
+          "value": [
+            "foo"
+          ]
+        },
+        "85": {
+          "label": "Label of Field with ID 85 in row 1 of section 8",
+          "type": "checkbox",
+          "value": [
+            "bar"
+          ]
+        }
+      },
+      "2": {
+        "84": {
+          "label": "Label of Field with ID 84 in row 2 of section 8",
+          "type": "radio",
+          "value": [
+            "foo2"
+          ]
+        },
+        "85": {
+          "label": "Label of Field with ID 85 in row 2 of section 8",
+          "type": "checkbox",
+          "value": [
+            "bar2",
+	    "bar3"
+          ]
+        }
+      }
+    }
+  }
+}
+```
