@@ -56,6 +56,11 @@ jobs:
             README.txt
           commit-msg: Update Version in WordPress specific files
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Update Tag
+        uses: richardsimko/update-tag@v1
+        with:
+          tag_name: ${{ env.RELEASE_VERSION }}
 
       # Delete Development Files
       - shell: bash
