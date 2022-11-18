@@ -133,6 +133,11 @@ class Options
      */
     public function get_actions($field) {
         $forms = wsf_form_get_all(true);
+
+        if (empty($forms)) {
+            return $field;
+        }
+
         foreach ($forms as &$form) {
             $form = wsf_form_get_form_object($form['id']);
 
