@@ -132,6 +132,11 @@ class Options
      * @throws \Exception
      */
     public function get_actions($field) {
+
+        if (!function_exists('wsf_form_get_all')) {
+            return $field;
+        }
+
         $forms = wsf_form_get_all(true);
 
         if (empty($forms)) {
