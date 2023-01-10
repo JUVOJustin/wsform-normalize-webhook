@@ -137,7 +137,7 @@ class Options
             return $field;
         }
 
-        $forms = wsf_form_get_all(true);
+        $forms = wsf_form_get_all();
 
         if (empty($forms)) {
             return $field;
