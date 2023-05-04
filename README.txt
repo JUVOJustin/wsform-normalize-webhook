@@ -34,6 +34,8 @@ hooks with the webhook url.
    5. Enter the url you want to send the form data to
 
 == Changelog ==
+= 1.0.5 =
+Remove array_merge to keep the array keys
 
 = 1.0.4 =
 Remove duplicate "goup" and "section" data for fields in repeatable sections
