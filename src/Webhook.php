@@ -116,7 +116,7 @@ class Webhook
             $fields[$id]['value'] = wsf_submit_get_value($this->submit, $key);
         }
 
-        return array_merge($fields, $repeatableSections);
+        return $fields + $repeatableSections;
 
     }
 
