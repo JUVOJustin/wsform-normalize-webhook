@@ -96,6 +96,11 @@ class Webhook
         $fields = [];
         foreach ($meta_fields as $key => $meta_field) {
 
+            // Skip fields like post_id. Normal fields are arrays
+            if (!is_array($meta_field)) {
+                continue;
+            }
+
             $id = $meta_field['id'];
             $row_index = $meta_field['repeatable_index'];
             $section_id = $meta_field['section_id'];
