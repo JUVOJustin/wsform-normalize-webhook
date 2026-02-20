@@ -8,6 +8,13 @@ class Options
 {
 
     /**
+     * Track if get_actions is currently running to prevent recursive calls
+     *
+     * @var bool
+     */
+    private static $getting_actions = false;
+
+    /**
      * Register ACF Options Page
      *
      * @return void
@@ -133,29 +140,51 @@ class Options
      */
     public function get_actions($field) {
 
+        // Prevent recursive calls that cause infinite loops
+        // This happens when WS Form's Data Source Term calls acf_get_fields() during config
+        if (self::$getting_actions) {
+            $field['choices'] = [];
+            return $field;
+        }
+
         if (!function_exists('wsf_form_get_all')) {
             return $field;
         }
 
+        // Mark as currently processing to prevent recursive calls
+        self::$getting_actions = true;
+
         $forms = wsf_form_get_all();
 
         if (empty($forms)) {
+            self::$getting_actions = false;
             return $field;
         }
 
-        foreach ($forms as &$form) {
-            $form = wsf_form_get_form_object($form['id']);
+        // Initialize choices array
+        $field['choices'] = [];
+
+        foreach ($forms as $form_data) {
+            $form = wsf_form_get_form_object($form_data['id']);
+
+            // Skip if form object couldn't be loaded
+            if (!$form || !isset($form->meta) || !isset($form->meta->action)) {
+                continue;
+            }
 
             $actions = $form->meta->action->groups[0]->rows ?? [];
             foreach ($actions as $action) {
                 $meta = $action->data[1] ?? [];
                 $meta = json_decode($meta);
 
-                if ($meta->id == "hook") {
+                if ($meta && isset($meta->id) && $meta->id == "hook" && isset($meta->meta->action_hook_hook)) {
                     $field['choices'][$meta->meta->action_hook_hook] = $meta->meta->action_hook_hook;
                 }
             }
         }
+
+        // Reset the flag
+        self::$getting_actions = false;
 
         return $field;
     }
@@ -179,7 +208,7 @@ class Options
                 continue;
             }
 
-            add_action($hook, function($form, WS_Form_Submit $submit) use ($url) {
+            add_action($hook, function($form, \WS_Form_Submit $submit) use ($url) {
                 $webhook = new Webhook($url, $submit, $form);
                 $webhook->send();
             }, 10, 2);
