@@ -106,6 +106,11 @@ class WSForm_Normalize_Webhook {
         $this->loader->add_filter('acf/init', $options, 'register_fields');
         $this->loader->add_filter('acf/init', $options, 'register_webhooks');
         $this->loader->add_filter('acf/load_field/key=field_63601771d963f', $options, 'get_actions');
+        $this->loader->add_action('wsf_form_create', $options, 'clear_hook_choices_cache', 10, 0);
+        $this->loader->add_action('wsf_form_publish', $options, 'clear_hook_choices_cache', 10, 0);
+        $this->loader->add_action('wsf_form_delete', $options, 'clear_hook_choices_cache', 10, 0);
+        $this->loader->add_action('wsf_form_trash', $options, 'clear_hook_choices_cache', 10, 0);
+        $this->loader->add_action('wsf_form_restore', $options, 'clear_hook_choices_cache', 10, 0);
 
     }
 

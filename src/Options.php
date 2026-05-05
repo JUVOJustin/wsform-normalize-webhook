@@ -6,6 +6,8 @@ use WS_Form_Submit;
 
 class Options
 {
+    const HOOK_CHOICES_TRANSIENT = 'wsform_normalize_webhook_hook_choices';
+    const HOOK_CHOICES_TRANSIENT_TTL = 7 * \DAY_IN_SECONDS;
 
     /**
      * Track if get_actions is currently running to prevent recursive calls
@@ -132,61 +134,164 @@ class Options
     }
 
     /**
-     * Get alls hooks configured in wsform actions as select field option
+     * Get all hooks configured in WS Form actions as select field options.
      *
-     * @param $field
+     * @param array $field
      * @return array
-     * @throws \Exception
      */
     public function get_actions($field) {
 
         // Prevent recursive calls that cause infinite loops
         // This happens when WS Form's Data Source Term calls acf_get_fields() during config
         if (self::$getting_actions) {
-            $field['choices'] = [];
             return $field;
         }
 
-        if (!function_exists('wsf_form_get_all')) {
+        if (!$this->is_settings_page()) {
             return $field;
         }
 
-        // Mark as currently processing to prevent recursive calls
+        $choices = $this->get_cached_hook_choices();
+        $saved_choices = $this->get_saved_hook_choices();
+
+        $field['choices'] = $choices + $saved_choices;
+
+        return $field;
+    }
+
+    /**
+     * Clear cached WS Form hook choices when forms change.
+     *
+     * @return void
+     */
+    public function clear_hook_choices_cache() {
+        delete_transient(self::HOOK_CHOICES_TRANSIENT);
+    }
+
+    /**
+     * Keep WS Form discovery off regular requests.
+     *
+     * @return bool
+     */
+    private function is_settings_page() {
+        if (!is_admin()) {
+            return false;
+        }
+
+        $page = '';
+        if (isset($_GET['page']) && is_string($_GET['page'])) {
+            $page = sanitize_key(wp_unslash($_GET['page']));
+        }
+
+        return $page === 'wsform-nomalize-webhook';
+    }
+
+    /**
+     * Read hook choices from cache or rebuild them immediately on a cache miss.
+     *
+     * @return array
+     */
+    private function get_cached_hook_choices() {
+        $choices = get_transient(self::HOOK_CHOICES_TRANSIENT);
+        if (is_array($choices)) {
+            return $choices;
+        }
+
+        $choices = $this->build_hook_choices();
+        if (is_array($choices)) {
+            set_transient(self::HOOK_CHOICES_TRANSIENT, $choices, self::HOOK_CHOICES_TRANSIENT_TTL);
+            return $choices;
+        }
+
+        return [];
+    }
+
+    /**
+     * Build hook choices from WS Form only when the admin select needs them.
+     *
+     * @return array|null
+     */
+    private function build_hook_choices() {
+        if (!function_exists('wsf_form_get_all') || !function_exists('wsf_form_get_form_object')) {
+            return null;
+        }
+
         self::$getting_actions = true;
 
-        $forms = wsf_form_get_all();
+        try {
+            $forms = wsf_form_get_all();
+            if (empty($forms)) {
+                return [];
+            }
 
-        if (empty($forms)) {
+            $choices = [];
+
+            foreach ($forms as $form_data) {
+                $form = wsf_form_get_form_object($form_data['id']);
+
+                if (!$form || !isset($form->meta) || !isset($form->meta->action)) {
+                    continue;
+                }
+
+                $actions = $form->meta->action->groups[0]->rows ?? [];
+                foreach ($actions as $action) {
+                    $meta = $action->data[1] ?? [];
+                    $meta = json_decode($meta);
+
+                    if ($meta && isset($meta->id) && $meta->id == "hook" && isset($meta->meta->action_hook_hook)) {
+                        $choices[$meta->meta->action_hook_hook] = $meta->meta->action_hook_hook;
+                    }
+                }
+            }
+
+            return $choices;
+        } catch (\Exception $exception) {
+            return null;
+        } finally {
             self::$getting_actions = false;
-            return $field;
+        }
+    }
+
+    /**
+     * Preserve saved hook values even if WS Form discovery is unavailable.
+     *
+     * @return array
+     */
+    private function get_saved_hook_choices() {
+        if (!function_exists('get_field')) {
+            return [];
         }
 
-        // Initialize choices array
-        $field['choices'] = [];
+        self::$getting_actions = true;
 
-        foreach ($forms as $form_data) {
-            $form = wsf_form_get_form_object($form_data['id']);
+        try {
+            $mapping = get_field('field_63601751d963e', 'options', false);
+        } catch (\Exception $exception) {
+            return [];
+        } finally {
+            self::$getting_actions = false;
+        }
 
-            // Skip if form object couldn't be loaded
-            if (!$form || !isset($form->meta) || !isset($form->meta->action)) {
+        if (empty($mapping) || !is_array($mapping)) {
+            return [];
+        }
+
+        $choices = [];
+
+        foreach ($mapping as $map) {
+            if (!is_array($map)) {
                 continue;
             }
 
-            $actions = $form->meta->action->groups[0]->rows ?? [];
-            foreach ($actions as $action) {
-                $meta = $action->data[1] ?? [];
-                $meta = json_decode($meta);
-
-                if ($meta && isset($meta->id) && $meta->id == "hook" && isset($meta->meta->action_hook_hook)) {
-                    $field['choices'][$meta->meta->action_hook_hook] = $meta->meta->action_hook_hook;
-                }
+            $hook = $map['hook'] ?? $map['field_63601771d963f'] ?? '';
+            if (empty($hook)) {
+                continue;
             }
+
+            $choices[$hook] = $hook;
         }
 
-        // Reset the flag
-        self::$getting_actions = false;
-
-        return $field;
+        return $choices;
     }
 
     /**
